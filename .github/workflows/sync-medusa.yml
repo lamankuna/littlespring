@@ -1,0 +1,39 @@
+name: Sync Medusa to lamankuna/littlespring-medusa
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [ main ]
+    paths:
+      - 'apps/medusa/**'
+      - 'packages/**'
+      - '.github/workflows/sync-medusa.yml'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Prepare payload (apps/medusa + packages)
+        run: |
+          set -e
+          mkdir -p out-medusa/apps out-medusa/packages
+          cp -R apps/medusa out-medusa/apps/
+          cp -R packages out-medusa/
+          cp -R tsconfig.base.json out-medusa/ || true
+          cp -R pnpm-workspace.yaml out-medusa/ || true
+          cp -R README.md out-medusa/ || true
+
+      - name: Push to littlespring-medusa
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.TARGET_PUSH_TOKEN }}
+        with:
+          source-directory: out-medusa
+          destination-github-username: lamankuna
+          destination-repository-name: littlespring-medusa
+          user-email: actions@github.com
+          target-branch: main
+

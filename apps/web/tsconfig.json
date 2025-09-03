@@ -1,0 +1,44 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./*"
+      ],
+      "@littlespring/core": [
+        "../../packages/core/src/index.ts"
+      ],
+      "@littlespring/ui": [
+        "../../packages/ui/src/index.ts"
+      ],
+      "@littlespring/legal": [
+        "../../packages/legal/index.ts"
+      ],
+      "@littlespring/payments": [
+        "../../packages/payments/index.ts"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "allowJs": true,
+    "noEmit": true,
+    "incremental": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "jsx": "preserve"
+  },
+  "include": [
+    "**/*.mdx",
+    "**/*.ts",
+    "**/*.tsx",
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

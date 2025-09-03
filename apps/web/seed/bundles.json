@@ -1,0 +1,18 @@
+[
+  {
+    "slug": "0-3m-starter",
+    "title": "0–3m starter",
+    "items": ["hooded-towel", "diaper-bag"]
+  },
+  {
+    "slug": "weaning-starter",
+    "title": "Weaning starter",
+    "items": ["silicone-suction-plate-pear", "stacking-cups", "long-sleeve-smock-bib"]
+  },
+  {
+    "slug": "bathtime-kit",
+    "title": "Bathtime kit",
+    "items": ["hooded-towel", "stacking-cups"]
+  }
+]
+

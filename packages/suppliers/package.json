@@ -1,0 +1,27 @@
+{
+  "name": "@littlespring/suppliers",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./4akid": "./4akid/index.ts",
+    "./wonderprint-woo": "./wonderprint-woo/index.ts",
+    "./bigbuy": "./bigbuy/index.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "dev": "tsc -p tsconfig.json --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "zod": "^3.23.8"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  }
+}
+

@@ -1,0 +1,19 @@
+{
+  "name": "littlespring",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Little Spring monorepo (Next.js storefront + Medusa backend + shared packages)",
+  "engines": {
+    "node": ">=18.18.0",
+    "pnpm": ">=8.6.0"
+  },
+  "packageManager": "pnpm@8.15.4",
+  "scripts": {
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "dev": "pnpm -r --parallel dev",
+    "lint": "pnpm -r lint",
+    "clean": "pnpm -r clean"
+  }
+}
+

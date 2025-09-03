@@ -1,0 +1,166 @@
+SYSTEM GOAL
+You are a senior full-stack engineer. Create a production-quality e-commerce store named “Little Spring” (baby & kids) for domain littlespring.co.za, owned by WeMakeSites. Prioritize VISUAL completeness first; integrations will be turned on incrementally. Build a monorepo with:
+- Frontend: Next.js 15 (App Router, RSC) + TypeScript + Tailwind + shadcn/ui + Sora font
+- Backend: Medusa (Node/TS) with Supabase Postgres (DB), Upstash Redis (queues/sessions)
+- Storage: Cloudflare R2 (S3-compatible) for product images
+- Payments: Paystack (stubbed; feature-flag OFF at start)
+- Emails: Resend (stubbed; feature-flag OFF at start)
+- Suppliers: 4aKid (ZA) primary (stub), Wonderprint (ZA POD via Woo bridge; configured placeholders), BigBuy (EU API; fast-ship only <= 7 business days; feature-flag OFF at start)
+
+REQUIREMENTS (MVP visual-first)
+- “Demo Catalog” renders real-looking products/collections from local JSON/seed tables.
+- Checkout path present but gated by FEATURE FLAGS (disabled by default).
+- Supplier adapters exist as stubs with TODOs and clear env placeholders.
+- Legal pages (Terms, Returns, Delivery, Privacy) generated from MDX templates with simple wording & placeholders; courier pickup returns (no walk-ins), customer books via support form (email TBD).
+- Analytics placeholders (GA4 ID, Sentry DSN) wired but feature-flag OFF.
+
+MONOREPO LAYOUT
+apps/
+  web/                # Next.js storefront
+  medusa/             # Medusa server + worker
+packages/
+  ui/                 # shared components (cards, badges, skeletons), theme tokens
+  suppliers/          # 4akid/ (stub), wonderprint-woo/ (bridge stub), bigbuy/ (adapter stub)
+  payments/           # paystack/ (init, verify, webhook; all noop behind flags)
+  legal/              # MDX policy templates with placeholders
+  core/               # shared types, zod schemas, ETA calculator, email templates
+
+THEME & BRAND
+- Font: Sora (Google)
+- Colors: warm-cream bg (#FFF9F4), charcoal text, spring-mint primary (#7ED9A3), peach accent (#FFC8A2)
+- Logo: text-logo component (no SVG yet); uses Sora bold
+- Tone: calm, spring, safety-first
+
+PAGES & UX (apps/web)
+- Home: hero with “Fast-ship baby & kids essentials”, 3 featured collections, teaser for POD “Personalised by Little Spring”
+- Collections (PLP): filters (age band, material, fast-ship badge, POD badge), pagination
+- PDP: gallery, price, variant picker, benefit bullets, safety/care notes, “Arrives by <date-range>” badge (computed via ETA helper; demo uses defaults)
+- Cart & Checkout: server-actions cart; checkout button disabled unless FEATURE_ENABLE_CHECKOUT=true
+- Account: orders list, tracking timeline (shows demo data if features off)
+- CMS: About, Delivery, Returns, Privacy, Terms (MDX from packages/legal)
+
+FEATURE FLAGS (apps/web .env)
+FEATURE_ENABLE_DEMO_CATALOG=true
+FEATURE_ENABLE_CHECKOUT=false
+FEATURE_ENABLE_EMAILS=false
+FEATURE_ENABLE_SUPPLIER_4AKID=false
+FEATURE_ENABLE_SUPPLIER_WONDERPRINT=false
+FEATURE_ENABLE_SUPPLIER_BIGBUY=false
+FEATURE_ENABLE_ANALYTICS=false
+
+DATA MODEL (apps/medusa)
+- Product, Variant, Price
+- SupplierProduct { supplier: '4akid'|'wonderprint'|'bigbuy', supplierProductId, variantMap, cost, leadTimeDays, warehouseRegion }
+- Order, OrderItem, Payment, SupplierOrder { externalId, carrier, trackingNo, trackUrl }
+- Content blocks for Delivery/Returns/Terms/Privacy (MDX or DB)
+
+SUPPLIER ADAPTERS (packages/suppliers)
+- 4akid/ (STUB)
+  sendPurchaseOrderEmail(order): generate PDF + JSON; NOOP when flag off
+  parseTrackingFromEmail(raw): parser stub (TODO)
+- wonderprint-woo/ (BRIDGE STUB)
+  createWooOrder(order): POST to <WONDERPRINT_WOO_BASE_URL>/wp-json/wc/v3/orders with Basic Auth (keys from env); NOOP when flag off
+  webhook handler (/api/webhooks/wonderprint): accept order status/tracking updates
+- bigbuy/ (ADAPTER STUB)
+  getShippingOptions(dest, lines): return array with ETA + price; demo returns sample fast options; when enabled, call their Shipping Costs endpoint
+  createOrder(order, carrier): NOOP until enabled
+  getTracking(externalId): NOOP until enabled
+
+PAYMENTS (packages/payments/paystack)
+- POST /api/payments/paystack/init: accepts {amountZAR, email}; when FEATURE_ENABLE_CHECKOUT=false returns {disabled:true,message:"Checkout disabled"}
+- GET /api/payments/paystack/verify: returns disabled message unless enabled
+- POST /api/webhooks/paystack: verifies signature; when disabled just 200 OK
+
+LEGAL (packages/legal)
+- MDX templates with placeholders:
+  Terms: Company “WeMakeSites”, trading as “Little Spring”
+  Returns: simple cooling-off explanation for online purchases, exclusions for personalised POD, courier pickup only; customer initiates via support form
+  Delivery: SA provinces only; fast-ship focus; no PO box delivery
+  Privacy: POPIA-aware; contact email placeholder until mail is set up
+
+ETA & BADGES (packages/core/lib/eta.ts)
+- computeEta({supplier, destProvince}) → demo rules:
+  4aKid: “Ships in 1–5 business days” (badge: Fast Ship ZA)
+  Wonderprint: “Local POD • ~3–4 days avg” (badge: Local POD)
+  BigBuy: show only if ETA <= 7 business days; otherwise hide from add-to-cart
+- PDP renders ETA badge & tooltip
+
+DEMO CATALOG
+- Seed JSON under apps/web/seed/catalog.json (~60–100 SKUs) with images from placeholders (e.g., R2 demo bucket URLs), categories:
+  Feeding & Mess, Bath & Care, On-the-Go, Nursery, Apparel (POD)
+- Each item includes: title, blurb, price, supplier tag, etaDisplay, careNotes, safetyNotes, images[]
+
+ENV TEMPLATES
+apps/web/.env.example
+NEXT_PUBLIC_BASE_URL=https://littlespring.co.za
+FEATURE_ENABLE_DEMO_CATALOG=true
+FEATURE_ENABLE_CHECKOUT=false
+FEATURE_ENABLE_EMAILS=false
+FEATURE_ENABLE_SUPPLIER_4AKID=false
+FEATURE_ENABLE_SUPPLIER_WONDERPRINT=false
+FEATURE_ENABLE_SUPPLIER_BIGBUY=false
+FEATURE_ENABLE_ANALYTICS=false
+PAYSTACK_PUBLIC_KEY=
+NEXT_PUBLIC_GA4_ID=
+NEXT_PUBLIC_SENTRY_DSN=
+R2_PUBLIC_BASE=
+
+apps/medusa/.env.example
+DATABASE_URL= # Supabase Postgres DSN
+REDIS_URL=     # Upstash
+PAYSTACK_SECRET=
+S3_ENDPOINT=   # R2
+S3_BUCKET=
+S3_ACCESS_KEY_ID=
+S3_SECRET_ACCESS_KEY=
+FOUR_A_KID_EMAIL= # placeholder until approved
+WONDERPRINT_WOO_BASE_URL=
+WONDERPRINT_WOO_KEY=
+WONDERPRINT_WOO_SECRET=
+BIGBUY_API_KEY=
+ORDERS_FROM_EMAIL=orders@littlespring.co.za   # placeholder; not active yet
+
+ACCEPTANCE CRITERIA (MVP)
+- `pnpm -w build` passes; type-check clean.
+- Home/Collections/PDP/Cart render from demo catalog; ETA badges show.
+- Checkout button visible but gated with friendly “Coming soon” modal.
+- Legal pages render with placeholders and courier-pickup returns policy.
+- Supplier & payment adapters exist (typed) behind flags; no runtime errors when disabled.
+- README explains how to enable each feature later.
+
+README CONTENT TO GENERATE
+1) Quick start
+   pnpm i
+   pnpm --filter medusa dev
+   pnpm --filter web dev
+2) Feature flags: how to toggle checkout, suppliers, analytics
+3) How to swap demo catalog for real products (Medusa import)
+4) How to configure R2, Supabase, Upstash, Paystack, Resend
+5) How returns via courier pickup will operate initially (manual email form)
+6) How to duplicate this repo for another brand (rename script)
+
+DELIVERABLES
+- Full monorepo with working visual storefront and disabled integrations
+- Clean, documented stubs for 4aKid, Wonderprint (Woo), BigBuy, Paystack
+- MDX legal templates with your placeholders and courier-pickup policy
+
+
+1) Sprout-dot Wordmark
+
+“Logo for Little Spring — friendly wordmark with a tiny sprout leaf replacing the dot on the ‘i’ in Spring. Clean, rounded sans serif (Sora-like), flat vector style, transparent background. Primary colors: spring-mint #7ED9A3 and peach #FFC8A2 accents, text in charcoal #333333 on warm-cream #FFF9F4 mock. Include secondary 1-color version. No gradients, no shadows, high contrast, embroidery-safe stroke weights. Deliver variants: full wordmark, icon-only sprout, monochrome.”
+
+2) Badge Patch (great for tees/caps)
+
+“Modern badge logo for Little Spring. Circular patch: minimal sprout icon centered, ‘Little Spring’ curved text around. Flat vector, transparent background. Palette: #7ED9A3 mint, #FFC8A2 peach, #FFF9F4 cream, #333333 charcoal. Thick lines, simple shapes, no fine detail, no gradient—optimized for woven patch/embroidery and screen print. Provide: badge, horizontal lockup, single-color version.”
+
+3) LS Monogram + Wordmark
+
+“Monogram for Little Spring combining letters L and S into a single mark with subtle leaf negative space. Next to it, a clean Sora-style wordmark. Flat vector, transparent background. Colors: charcoal #333333 wordmark, mint #7ED9A3 monogram, optional peach #FFC8A2 highlight. Include 1-color black and 1-color mint versions. No gradients, no bevels, embroidery-safe (minimum stroke ≥ 2.5–3 mm).”
+
+4) Minimal Line-Art Sprout Mascot
+
+“Cute minimal line-art sprout mascot plus Little Spring wordmark. Friendly, calm vibe; tiny eyes (⋯) optional; flat vector; transparent background. Palette: mint #7ED9A3 for mascot line, charcoal #333333 wordmark, small peach #FFC8A2 blush dot. Keep geometry simple for print; no tiny details, no gradients. Deliver icon-only mascot, stacked lockup, and 1-color silhouette.”
+
+5) Ribbon Script + Leaf
+
+“Logo for Little Spring with a soft script/ribbon feel on ‘Little’, clean sans on ‘Spring’. A leaf sprout grows from the tail of the g. Flat vector, transparent background. Colors: charcoal #333333 type, mint #7ED9A3 leaf, optional peach #FFC8A2 accent; show on cream #FFF9F4 mock. Provide horizontal and stacked versions, plus 1-color and black/white exports. No gradients, no shadows.”

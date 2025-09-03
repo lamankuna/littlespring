@@ -1,0 +1,40 @@
+name: Sync Web to lamankuna/littlespring-web
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [ main ]
+    paths:
+      - 'apps/web/**'
+      - 'packages/**'
+      - '.github/workflows/sync-web.yml'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Prepare payload (apps/web + packages)
+        run: |
+          set -e
+          mkdir -p out-web/apps out-web/packages
+          cp -R apps/web out-web/apps/
+          cp -R packages out-web/
+          # Optional: include root tsconfig + README for context
+          cp -R tsconfig.base.json out-web/ || true
+          cp -R pnpm-workspace.yaml out-web/ || true
+          cp -R README.md out-web/ || true
+
+      - name: Push to littlespring-web
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.TARGET_PUSH_TOKEN }}
+        with:
+          source-directory: out-web
+          destination-github-username: lamankuna
+          destination-repository-name: littlespring-web
+          user-email: actions@github.com
+          target-branch: main
+

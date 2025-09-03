@@ -1,0 +1,23 @@
+{
+  "name": "@littlespring/legal",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./terms.mdx": "./terms.mdx",
+    "./returns.mdx": "./returns.mdx",
+    "./delivery.mdx": "./delivery.mdx",
+    "./privacy.mdx": "./privacy.mdx"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "dev": "tsc -p tsconfig.json --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  }
+}

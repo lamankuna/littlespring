@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "lib": ["ES2021", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "types": [],
+    "baseUrl": ".",
+    "paths": {
+      "@littlespring/core": ["packages/core/src/index.ts"],
+      "@littlespring/core/*": ["packages/core/src/*"],
+      "@littlespring/ui": ["packages/ui/src/index.ts"],
+      "@littlespring/ui/*": ["packages/ui/src/*"],
+      "@littlespring/legal": ["packages/legal/index.ts"],
+      "@littlespring/suppliers": ["packages/suppliers/index.ts"],
+      "@littlespring/suppliers/*": ["packages/suppliers/*"],
+      "@littlespring/payments": ["packages/payments/index.ts"],
+      "@littlespring/payments/*": ["packages/payments/*"]
+    }
+  }
+}
+

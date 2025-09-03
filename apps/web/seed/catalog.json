@@ -1,0 +1,101 @@
+[
+  {
+    "id": "seed-plate-pear",
+    "slug": "silicone-suction-plate-pear",
+    "title": "Silicone suction plate — Pear",
+    "blurb": "Divided, suction base keeps meals steady.",
+    "category": "plates-bowls",
+    "supplier": "4akid",
+    "material": "silicone",
+    "badges": ["fast-ship-za"],
+    "ageTags": ["6-12m","12-24m"],
+    "price": 19900,
+    "images": ["https://placehold.co/800x800/7ED9A3/ffffff?text=Suction+Plate"] ,
+    "safetyNotes": "Not a toy. Inspect regularly. Discontinue at first sign of wear.",
+    "careNotes": "Dishwasher safe (top rack)."
+  },
+  {
+    "id": "seed-bib-smock",
+    "slug": "long-sleeve-smock-bib",
+    "title": "Long-sleeve smock bib",
+    "blurb": "Sleeved bib for messy eaters and crafts.",
+    "category": "smocks",
+    "supplier": "4akid",
+    "material": "polyester",
+    "badges": ["fast-ship-za"],
+    "price": 15900,
+    "images": ["https://placehold.co/800x800/7ED9A3/ffffff?text=Smock"]
+  },
+  {
+    "id": "seed-stack-cups",
+    "slug": "stacking-cups",
+    "title": "Stacking cups",
+    "blurb": "Sensory play and bath fun.",
+    "category": "plates-bowls",
+    "supplier": "4akid",
+    "material": "silicone",
+    "badges": ["fast-ship-za"],
+    "price": 18900,
+    "images": ["https://placehold.co/800x800/FFF0E7/333333?text=Stack+Cups"]
+  },
+  {
+    "id": "seed-bottle-240",
+    "slug": "glass-feeding-bottle-240ml",
+    "title": "Glass feeding bottle 240ml",
+    "blurb": "Durable glass bottle with anti-colic teat.",
+    "category": "plates-bowls",
+    "supplier": "bigbuy",
+    "material": "glass",
+    "badges": [],
+    "price": 22900,
+    "images": ["https://placehold.co/800x800/F5F5F5/333333?text=Bottle+240ml"]
+  },
+  {
+    "id": "seed-hooded-towel",
+    "slug": "hooded-towel",
+    "title": "Hooded towel",
+    "blurb": "Cozy post-bath wrap for little ones.",
+    "category": "hooded-towels",
+    "supplier": "4akid",
+    "material": "cotton",
+    "badges": ["fast-ship-za"],
+    "price": 24900,
+    "images": ["https://placehold.co/800x800/FFC8A2/333333?text=Hooded+Towel"]
+  },
+  {
+    "id": "seed-pod-tee",
+    "slug": "personalised-kids-tee",
+    "title": "Personalised kids tee",
+    "blurb": "Custom name print. Soft cotton.",
+    "category": "tees",
+    "supplier": "wonderprint",
+    "material": "cotton",
+    "badges": ["local-pod"],
+    "price": 19900,
+    "images": ["https://placehold.co/800x800/FFF0E7/333333?text=POD+Tee"]
+  },
+  {
+    "id": "seed-beanie",
+    "slug": "personalised-beanie",
+    "title": "Personalised beanie",
+    "blurb": "Cozy beanie with custom embroidery.",
+    "category": "beanies",
+    "supplier": "wonderprint",
+    "material": "cotton",
+    "badges": ["local-pod"],
+    "price": 14900,
+    "images": ["https://placehold.co/800x800/FFF0E7/333333?text=POD+Beanie"]
+  },
+  {
+    "id": "seed-diaper-bag",
+    "slug": "diaper-bag",
+    "title": "Diaper bag",
+    "blurb": "Spacious organizer with stroller straps.",
+    "category": "diaper-bags",
+    "supplier": "4akid",
+    "material": "polyester",
+    "badges": ["fast-ship-za"],
+    "price": 59900,
+    "images": ["https://placehold.co/800x800/7ED9A3/333333?text=Diaper+Bag"]
+  }
+]

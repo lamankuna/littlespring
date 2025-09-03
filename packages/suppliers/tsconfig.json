@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "."
+  },
+  "include": ["index.ts", "4akid/**/*.ts", "wonderprint-woo/**/*.ts", "bigbuy/**/*.ts"]
+}
+
